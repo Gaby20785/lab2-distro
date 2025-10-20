@@ -1,0 +1,10 @@
+FROM golang:1.24.0
+
+WORKDIR /app
+
+COPY . .
+
+RUN cd nodos && go build -o nodo .
+EXPOSE 50052-50054
+
+CMD ["./nodos/nodo", "--nodo=DB1"]

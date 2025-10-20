@@ -1,0 +1,12 @@
+FROM golang:1.24.0
+
+WORKDIR /app
+
+# Copiar todo el proyecto (desde la raíz lab2)
+COPY . .
+
+RUN cd broker && go build -o broker .
+
+EXPOSE 50051
+
+CMD ["./broker/broker"]

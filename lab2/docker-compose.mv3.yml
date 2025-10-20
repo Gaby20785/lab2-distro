@@ -1,0 +1,23 @@
+services:
+  # Productor Parisio
+  productor-parisio:
+    build:
+      context: .
+      dockerfile: productores/Dockerfile
+    command: ["./productores/productor", "--tienda=Parisio"]
+    volumes:
+      - ./catalogos:/app/catalogos
+    environment:
+      - BROKER_HOST=10.35.168.26
+
+  # Nodo DB3
+  nodo-db3:
+    build:
+      context: .
+      dockerfile: nodos/Dockerfile
+    command: ["./nodos/nodo", "--nodo=DB3"]
+    ports:
+      - "50054:50054"
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - NODO_DIRECCION=10.35.168.25:50054

@@ -1,0 +1,76 @@
+services:
+  # Productor Falabellox
+  productor-falabellox:
+    build:
+      context: .
+      dockerfile: productores/Dockerfile
+    command: ["./productores/productor", "--tienda=Falabellox"]
+    volumes:
+      - ./catalogos:/app/catalogos
+    environment:
+      - BROKER_HOST=10.35.168.26
+
+  # Nodo DB2
+  nodo-db2:
+    build: 
+      context: .
+      dockerfile: nodos/Dockerfile
+    command: ["./nodos/nodo", "--nodo=DB2"]
+    ports:
+      - "50053:50053"
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - NODO_DIRECCION=10.35.168.24:50053
+
+  # Consumidores 9,10,11,12
+  consumidor9:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=9"]
+    ports:
+      - "50069:50069"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.24:50069
+
+  consumidor10:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=10"]
+    ports:
+      - "50070:50070"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.24:50070
+
+  consumidor11:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=11"]
+    ports:
+      - "50071:50071"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.24:50071
+
+  consumidor12:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=12"]
+    ports:
+      - "50072:50072"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.24:50072

@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+option go_package = "/proto";
+
+package cyberday;
+
+//********** Mensajes para el registro ***********
+
+message RegistroProductorRequest {
+    string nombre = 1;
+}
+
+message RegistroNodoRequest {
+    string nombre = 1;
+    string direccion = 2;
+}
+
+message RegistroConsumidorRequest {
+    string consumidor_id = 1;
+    repeated string categorias = 2;
+    repeated string tiendas = 3;
+    int32 precio_max = 4;
+    string direccion =5;
+}
+
+message RegistroResponse {
+    bool exito = 1;
+}
+
+//********* Mensajes para poder dar inicio al envío de ofertas ********
+
+message InicioRequest {}
+
+message InicioResponse {
+    bool inicio = 1;
+}
+
+//********* Mensajes para envio de ofertas ************
+
+message OfertaRequest {
+    string oferta_id = 1;
+    string tienda = 2;
+    string categoria = 3;
+    string producto = 4;
+    int32 precio = 5;
+    int32 stock = 6;
+    string fecha = 7;
+}
+
+message OfertaResponse {
+    bool exito = 1;
+}
+
+//********* Mensajes para sincronizacion de nodos **********
+message SincronizacionRequest {
+    string entidad_id = 1;
+    string tipo = 2;
+    repeated OfertaRequest ofertas_actuales =3;
+}
+
+message SincronizacionResponse {
+    repeated OfertaRequest ofertas_faltantes = 1;
+    bool exito = 2;
+}
+
+//******** Mensajes para lectura **********
+message LecturaRequest {}
+
+message LecturaResponse {
+    repeated OfertaRequest ofertas = 1;
+    bool exito = 2;
+}
+
+//******** Mensajes para Shutdown **********
+message ConsultarEstadoRequest {}
+
+message ConsultarEstadoResponse {
+    bool activo = 1;
+}
+
+
+//********** Servicio CyberDay ***********
+
+service CyberDayService {
+    //Registro de entidades (entidades -> broker)
+    rpc RegistrarProductor(RegistroProductorRequest) returns (RegistroResponse);
+    rpc RegistrarNodo(RegistroNodoRequest) returns (RegistroResponse);
+    rpc RegistrarConsumidor(RegistroConsumidorRequest) returns (RegistroResponse);
+    
+    //Inicio de envio de ofertas (nodos -> broker)
+    rpc SolicitarInicio(InicioRequest) returns (InicioResponse);
+    //Envio de ofertas (consumidor -> broker, broker -> nodo, broker -> consumidor)
+    rpc EnviarOferta(OfertaRequest) returns (OfertaResponse);
+    
+    //Sincronizacion (Nodo -> broker, Consumidores -> broker)
+    rpc SincronizarEntidad(SincronizacionRequest) returns (SincronizacionResponse);
+    
+    //Lectura de ofertas (broker -> nodos)
+    rpc LeerOfertas(LecturaRequest) returns (LecturaResponse);
+
+    //Shutdown (productores -> broker)
+    rpc ConsultarEstado(ConsultarEstadoRequest) returns (ConsultarEstadoResponse);
+}

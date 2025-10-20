@@ -1,0 +1,74 @@
+services:
+  # Broker
+  broker:
+    build: 
+      context: .
+      dockerfile: broker/Dockerfile
+    command: ["./broker/broker"]
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./output:/output
+    stdin_open: true
+    tty: true
+
+  # Consumidores 1,2,3,4
+  consumidor1:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=1"]
+    ports:
+      - "50061:50061"
+    volumes:
+      - ./output:/output
+    depends_on:
+      - broker
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.26:50061
+
+  consumidor2:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=2"]
+    ports:
+      - "50062:50062"
+    volumes:
+      - ./output:/output
+    depends_on:
+      - broker
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.26:50062
+
+  consumidor3:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=3"]
+    ports:
+      - "50063:50063"
+    volumes:
+      - ./output:/output
+    depends_on:
+      - broker
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.26:50063
+
+  consumidor4:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=4"]
+    ports:
+      - "50064:50064"
+    volumes:
+      - ./output:/output
+    depends_on:
+      - broker
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.26:50064

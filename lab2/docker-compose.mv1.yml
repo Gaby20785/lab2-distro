@@ -1,0 +1,76 @@
+services:
+  # Productor Riploy
+  productor-riploy:
+    build:
+      context: .
+      dockerfile: productores/Dockerfile
+    command: ["./productores/productor", "--tienda=Riploy"]
+    volumes:
+      - ./catalogos:/app/catalogos
+    environment:
+      - BROKER_HOST=10.35.168.26
+
+  # Nodo DB1
+  nodo-db1:
+    build: 
+      context: .
+      dockerfile: nodos/Dockerfile
+    command: ["./nodos/nodo", "--nodo=DB1"]
+    ports:
+      - "50052:50052"
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - NODO_DIRECCION=10.35.168.23:50052
+
+  # Consumidores 5,6,7,8
+  consumidor5:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=5"]
+    ports:
+      - "50065:50065"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.23:50065
+
+  consumidor6:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=6"]
+    ports:
+      - "50066:50066"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.23:50066
+
+  consumidor7:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=7"]
+    ports:
+      - "50067:50067"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.23:50067
+
+  consumidor8:
+    build:
+      context: .
+      dockerfile: consumidores/Dockerfile
+    command: ["./consumidores/consumidor", "--cliente=8"]
+    ports:
+      - "50068:50068"
+    volumes:
+      - ./output:/output
+    environment:
+      - BROKER_HOST=10.35.168.26
+      - CONSUMIDOR_DIRECCION=10.35.168.23:50068

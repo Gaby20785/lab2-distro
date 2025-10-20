@@ -1,0 +1,13 @@
+FROM golang:1.24.0
+
+WORKDIR /app
+
+# Copiar todo el proyecto
+COPY . .
+
+# Compilar consumidores
+RUN cd consumidores && go build -o consumidor .
+
+EXPOSE 50060-50071
+
+CMD ["./consumidores/consumidor", "--cliente=1"]
